@@ -1,0 +1,174 @@
+---
+import "@fontsource-variable/roboto-mono";
+
+import Game from "../components/game";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Word Pyramid</title>
+  </head>
+  <body>
+    <main>
+      <h1>Word Pyramid</h1>
+      <Game client:load />
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --accent-color: #282c34;
+    --tile-dimension: 4rem;
+    --tile-font-size: calc(var(--tile-dimension) * 0.5);
+    --bevel-shadow: 1px 7px 15px rgb(0 0 0 / 0.8),
+      inset 3px 0 2px rgb(255 255 255 / 0.4),
+      inset 0 3px 0px rgb(255 255 255 / 0.5),
+      inset -2px -3px 0px rgb(143 128 82 / 0.6);
+    @media (max-width: 800px) {
+      --tile-dimension: 3rem;
+    }
+  }
+  html,
+  body {
+    margin: 0;
+    height: 100%;
+  }
+  body {
+    background: var(--accent-color);
+    color: white;
+    font-family: "Roboto Mono Variable", monospace;
+  }
+  main {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .grid {
+    --col-width: calc(var(--tile-dimension) / 2);
+    --gap: calc(var(--col-width) / 5);
+    display: grid;
+    row-gap: var(--gap);
+    column-gap: var(--gap);
+    &.pyramid {
+      grid-template-columns: repeat(10, var(--col-width));
+      & .tile:nth-child(1) {
+        grid-column: 5 / span 2;
+        grid-row: 1 / span 1;
+      }
+      & .tile:nth-child(n + 2):nth-child(-n + 3) {
+        grid-row: 2 / span 1;
+      }
+      & .tile:nth-child(2) {
+        grid-column: 4 / span 2;
+      }
+      & .tile:nth-child(3) {
+        grid-column: 6 / span 2;
+      }
+      & .tile:nth-child(n + 4):nth-child(-n + 6) {
+        grid-row: 3 / span 1;
+      }
+      & .tile:nth-child(4) {
+        grid-column: 3 / span 2;
+      }
+      & .tile:nth-child(5) {
+        grid-column: 5 / span 2;
+      }
+      & .tile:nth-child(6) {
+        grid-column: 7 / span 2;
+      }
+      & .tile:nth-child(n + 7):nth-child(-n + 10) {
+        grid-row: 4 / span 1;
+      }
+      & .tile:nth-child(7) {
+        grid-column: 2 / span 2;
+      }
+      & .tile:nth-child(8) {
+        grid-column: 4 / span 2;
+      }
+      & .tile:nth-child(9) {
+        grid-column: 6 / span 2;
+      }
+      & .tile:nth-child(10) {
+        grid-column: 8 / span 2;
+      }
+      & .tile:nth-child(n + 11):nth-child(-n + 15) {
+        grid-column: auto / span 2;
+        grid-row: 5 / span 1;
+      }
+    }
+    & .tile {
+      box-shadow: 0 0 0 1px rgb(255 255 255 / 1);
+      cursor: pointer;
+    }
+  }
+  .tile {
+    appearance: none;
+    position: relative;
+    width: var(--tile-dimension);
+    height: var(--tile-dimension);
+    padding: 0;
+    border-radius: 5%;
+    border: none;
+    color: var(--accent-color);
+    font-family: inherit;
+    font-size: var(--tile-font-size);
+    font-weight: 700;
+    text-shadow:
+      1px 1px 1px rgb(255 255 255 / 0.9),
+      0 -1px 1px rgb(255 255 255 / 0.2);
+    &[data-letter]:not([data-letter=""]) {
+      background: hsl(35 71% 80%);
+      box-shadow: var(--bevel-shadow);
+      &::before {
+        position: absolute;
+        content: attr(data-letter);
+        line-height: var(--tile-dimension);
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        text-transform: uppercase;
+      }
+    }
+  }
+  .controls {
+    --gap: calc(var(--tile-dimension) * 0.75);
+    display: flex;
+    align-items: start;
+    gap: var(--gap);
+    padding: calc(var(--gap) * 0.5);
+    & .current-letter {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+  }
+  button.tile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(var(--tile-dimension) * 1.5);
+    background-color: hsl(0 0% 100% / var(--bg-opacity, 0.75));
+    box-shadow: var(--bevel-shadow);
+    cursor: pointer;
+    transition: transform 25ms ease-in-out;
+    &:active:not(:disabled) {
+      transform: translate(0.5px, 1px);
+    }
+    &:disabled {
+      --bg-opacity: 0.25;
+      cursor: not-allowed;
+    }
+    & > svg {
+      height: var(--tile-font-size);
+      width: var(--tile-font-size);
+    }
+  }
+</style>
