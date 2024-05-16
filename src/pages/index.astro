@@ -5,7 +5,7 @@ import "@fontsource-variable/roboto-mono";
 import Game from "../components/game";
 ---
 
-<html lang="en">
+<html lang="en" onclick="(e) => e.preventDefault()">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -33,6 +33,9 @@ import Game from "../components/game";
     @media (max-width: 800px) {
       --tile-dimension: 3rem;
     }
+  }
+  * {
+    touch-action: manipulation;
   }
   body {
     background: var(--accent-color);
