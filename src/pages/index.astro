@@ -150,25 +150,30 @@ import Game from "../components/game";
       gap: 1rem;
     }
   }
-  button.tile {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: calc(var(--tile-dimension) * 1.5);
-    background-color: hsl(0 0% 100% / var(--bg-opacity, 0.75));
-    box-shadow: var(--bevel-shadow);
+  button {
+    touch-action: manipulation;
     cursor: pointer;
-    transition: transform 25ms ease-in-out;
-    &:active:not(:disabled) {
-      transform: translate(0.5px, 1px);
-    }
     &:disabled {
-      --bg-opacity: 0.25;
       cursor: not-allowed;
     }
-    & > svg {
-      height: var(--tile-font-size);
-      width: var(--tile-font-size);
+    &.tile {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: calc(var(--tile-dimension) * 1.5);
+      background-color: hsl(0 0% 100% / var(--bg-opacity, 0.75));
+      box-shadow: var(--bevel-shadow);
+      transition: transform 25ms ease-in-out;
+      &:active:not(:disabled) {
+        transform: translate(0.5px, 1px);
+      }
+      &:disabled {
+        --bg-opacity: 0.25;
+      }
+      & > svg {
+        height: var(--tile-font-size);
+        width: var(--tile-font-size);
+      }
     }
   }
 </style>
