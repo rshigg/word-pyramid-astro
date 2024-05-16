@@ -1,4 +1,5 @@
 ---
+import "../reset.css";
 import "@fontsource-variable/roboto-mono";
 
 import Game from "../components/game";
@@ -33,23 +34,18 @@ import Game from "../components/game";
       --tile-dimension: 3rem;
     }
   }
-  html,
-  body {
-    margin: 0;
-    height: 100%;
-  }
   body {
     background: var(--accent-color);
     color: white;
     font-family: "Roboto Mono Variable", monospace;
-    touch-action: manipulation;
   }
   main {
-    height: 100vh;
+    min-height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: calc(var(--tile-dimension) * 0.75);
   }
   .grid {
     --col-width: calc(var(--tile-dimension) / 2);
@@ -143,7 +139,6 @@ import Game from "../components/game";
     display: flex;
     align-items: start;
     gap: var(--gap);
-    padding: calc(var(--gap) * 0.5);
     & .current-letter {
       display: flex;
       flex-direction: column;
