@@ -1,4 +1,4 @@
-import { createEffect, createSignal, type JSX } from "solid-js";
+import { Index, createSignal, type JSX } from "solid-js";
 import { createStore } from "solid-js/store";
 
 export const letterData = {
@@ -30,7 +30,9 @@ export const letterData = {
   z: { weight: 10 },
 };
 
-export const letters = Object.keys(letterData);
+const letters = Object.keys(letterData);
+const ROWS = 5;
+const INITIAL_SKIPS = 10;
 
 export function random(min: number, max: number) {
   return Math.floor(Math.random() * (max - min)) + min;
@@ -60,27 +62,26 @@ function Tile(props: TileProps): JSX.Element {
   );
 }
 
-const INITIAL_LETTERS = Array.from<string | null>({ length: 15 }).fill(null);
-const INITIAL_SKIPS = 10;
+const getInitialLetters = () =>
+  Array.from({ length: ROWS }).map((_row, index) =>
+    Array.from<string | null>({ length: index + 1 }).fill(null)
+  );
 
 function Game(): JSX.Element {
-  const [letters, setLetterData] = createSignal(INITIAL_LETTERS);
+  const [grid, setGrid] = createStore(getInitialLetters());
   const [currentLetter, setCurrentLetter] = createSignal(getRandomLetter());
   const [skips, setSkips] = createSignal(INITIAL_SKIPS);
 
-  const handleTileSelect = (index: number) => {
-    if (!letters()[index]) {
-      setLetterData((currentLetters) => {
-        const newLetters = [...currentLetters];
-        newLetters[index] = currentLetter();
-        return newLetters;
-      });
+  const handleTileSelect = (rowIndex: number, colIndex: number) => {
+    const letter = () => grid[rowIndex][colIndex];
+    if (!letter()) {
+      setGrid(rowIndex, colIndex, currentLetter());
       setCurrentLetter(getRandomLetter());
     }
   };
 
   const handleReset = () => {
-    setLetterData(INITIAL_LETTERS);
+    setGrid(getInitialLetters());
     setSkips(INITIAL_SKIPS);
     setCurrentLetter(getRandomLetter());
   };
@@ -94,14 +95,26 @@ function Game(): JSX.Element {
 
   return (
     <>
-      <div class="grid pyramid">
-        {letters().map((letter, index) => (
-          <Tile letter={letter} onSetLetter={() => handleTileSelect(index)} />
-        ))}
+      <div class="grid">
+        <Index each={grid}>
+          {(row, rowIndex) => (
+            <div class="row">
+              <Index each={row()}>
+                {(letter, colIndex) => (
+                  <Tile
+                    letter={letter()}
+                    onSetLetter={() => handleTileSelect(rowIndex, colIndex)}
+                  />
+                )}
+              </Index>
+            </div>
+          )}
+        </Index>
       </div>
       <div class="controls">
-        <button aria-label="Reset" class="tile" onClick={handleReset}>
+        <button class="tile" onClick={handleReset}>
           <svg
+            aria-label="Reset"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 512 512"
             fill="currentColor"
@@ -113,13 +126,12 @@ function Game(): JSX.Element {
           <div class="tile" data-letter={currentLetter()} />
           {String(skips()).padStart(2, "0")}/{INITIAL_SKIPS}
         </div>
-        <button
-          aria-label="Next letter"
-          class="tile"
-          onClick={handleNextLetter}
-          disabled={skips() <= 0}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+        <button class="tile" onClick={handleNextLetter} disabled={skips() <= 0}>
+          <svg
+            aria-label="Next letter"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 448 512"
+          >
             <path d="M448 96l0-32-64 0 0 32 0 320 0 32 64 0 0-32 0-320zM310.6 278.6L333.3 256l-22.6-22.6-128-128L160 82.7 114.7 128l22.6 22.6L210.7 224 32 224 0 224l0 64 32 0 178.7 0-73.4 73.4L114.7 384 160 429.3l22.6-22.6 128-128z" />
           </svg>
         </button>
