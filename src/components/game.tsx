@@ -1,36 +1,34 @@
 import { Index, createSignal, type JSX } from "solid-js";
 import { createStore } from "solid-js/store";
 
-export const letterData = {
-  a: { weight: 1 },
-  b: { weight: 3 },
-  c: { weight: 3 },
-  d: { weight: 2 },
-  e: { weight: 1 },
-  f: { weight: 4 },
-  g: { weight: 2 },
-  h: { weight: 4 },
-  i: { weight: 1 },
-  j: { weight: 8 },
-  k: { weight: 5 },
-  l: { weight: 1 },
-  m: { weight: 3 },
-  n: { weight: 1 },
-  o: { weight: 1 },
-  p: { weight: 3 },
-  q: { weight: 10 },
-  r: { weight: 1 },
-  s: { weight: 1 },
-  t: { weight: 1 },
-  u: { weight: 1 },
-  v: { weight: 4 },
-  w: { weight: 4 },
-  x: { weight: 8 },
-  y: { weight: 4 },
-  z: { weight: 10 },
-};
-
-const letters = Object.keys(letterData);
+const LETTERS = [
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
+];
 const ROWS = 5;
 const INITIAL_SKIPS = 10;
 
@@ -39,7 +37,7 @@ export function random(min: number, max: number) {
 }
 
 export function getRandomLetter() {
-  return letters[random(0, letters.length)];
+  return LETTERS[random(0, LETTERS.length)];
 }
 
 type TileProps = Partial<HTMLInputElement> & {
