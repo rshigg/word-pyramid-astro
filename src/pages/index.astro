@@ -25,6 +25,7 @@ import Game from "../components/game";
   :root {
     --accent-color: #282c34;
     --tile-dimension: 4rem;
+    --tile-radius: 5%;
     --tile-font-size: calc(var(--tile-dimension) * 0.5);
     --bevel-shadow: 1px 7px 15px rgb(0 0 0 / 0.8),
       inset 3px 0 2px rgb(255 255 255 / 0.4),
@@ -60,14 +61,21 @@ import Game from "../components/game";
       justify-content: center;
       gap: var(--gap);
     }
-    & .tile {
+    & button {
+      width: var(--tile-dimension);
+      height: var(--tile-dimension);
+      border-radius: var(--tile-radius);
       border: 1px solid white;
       cursor: pointer;
+      &.tile {
+        border: none;
+      }
     }
   }
   .tile {
-    appearance: none;
-    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: var(--tile-dimension);
     height: var(--tile-dimension);
     padding: 0;
@@ -80,25 +88,16 @@ import Game from "../components/game";
     text-shadow:
       1px 1px 1px rgb(255 255 255 / 0.9),
       0 -1px 1px rgb(255 255 255 / 0.2);
-    &[data-letter]:not([data-letter=""]) {
-      background: hsl(35 71% 80%);
-      box-shadow: var(--bevel-shadow);
-      &::before {
-        position: absolute;
-        content: attr(data-letter);
-        line-height: var(--tile-dimension);
-        width: 100%;
-        height: 100%;
-        text-align: center;
-        text-transform: uppercase;
-      }
-    }
+    background: hsl(35 71% 80%);
+    box-shadow: var(--bevel-shadow);
+    text-transform: uppercase;
   }
   .controls {
     --gap: calc(var(--tile-dimension) * 0.75);
     display: flex;
     align-items: start;
     gap: var(--gap);
+    white-space: pre;
     & .current-letter {
       display: flex;
       flex-direction: column;
@@ -107,28 +106,47 @@ import Game from "../components/game";
     }
   }
   button {
+    appearance: none;
+    border: none;
+    background: none;
     cursor: pointer;
     &:disabled {
       cursor: not-allowed;
     }
-    &.tile {
+    &.game-btn {
       display: flex;
       justify-content: center;
       align-items: center;
       width: calc(var(--tile-dimension) * 1.5);
+      height: var(--tile-dimension);
       background-color: hsl(0 0% 100% / var(--bg-opacity, 0.75));
       box-shadow: var(--bevel-shadow);
       transition: transform 25ms ease-in-out;
-      &:active:not(:disabled) {
+      &:active {
         transform: translate(0.5px, 1px);
       }
       &:disabled {
         --bg-opacity: 0.25;
+        transform: none;
       }
       & > svg {
         height: var(--tile-font-size);
         width: var(--tile-font-size);
       }
     }
+  }
+</style>
+
+<style is:global>
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 </style>

@@ -42,23 +42,25 @@ export function getRandomLetter() {
   return letters[random(0, letters.length)];
 }
 
-type TileProps = {
+type TileProps = Partial<HTMLInputElement> & {
   letter: string | null;
-  onSetLetter: () => void;
+  onSetLetter: JSX.EventHandlerUnion<HTMLButtonElement, MouseEvent>;
 };
 
 function Tile(props: TileProps): JSX.Element {
   const hasLetter = () => props.letter !== null;
 
   return (
-    <input
-      type="checkbox"
-      class="tile"
-      checked={hasLetter()}
-      data-letter={props.letter ?? ""}
-      onChange={props.onSetLetter}
-      disabled={hasLetter()}
-    />
+    <button
+      role="switch"
+      id={props.id}
+      aria-checked={hasLetter()}
+      aria-readonly={hasLetter()}
+      onclick={props.onSetLetter}
+      class={hasLetter() ? "tile" : ""}
+    >
+      {props.letter}
+    </button>
   );
 }
 
@@ -102,6 +104,7 @@ function Game(): JSX.Element {
               <Index each={row()}>
                 {(letter, colIndex) => (
                   <Tile
+                    id={`${rowIndex}-${colIndex}`}
                     letter={letter()}
                     onSetLetter={() => handleTileSelect(rowIndex, colIndex)}
                   />
@@ -112,7 +115,7 @@ function Game(): JSX.Element {
         </Index>
       </div>
       <div class="controls">
-        <button class="tile" onClick={handleReset}>
+        <button class="game-btn" onClick={handleReset}>
           <svg
             aria-label="Reset"
             xmlns="http://www.w3.org/2000/svg"
@@ -123,10 +126,21 @@ function Game(): JSX.Element {
           </svg>
         </button>
         <div class="current-letter">
-          <div class="tile" data-letter={currentLetter()} />
-          {String(skips()).padStart(2, "0")}/{INITIAL_SKIPS}
+          <span class="tile" tabIndex={0}>
+            <span class="sr-only">Current letter: </span>
+            {currentLetter()}
+          </span>
+          <span id="skips" role="alert">
+            {String(skips())}/{INITIAL_SKIPS}
+            <span class="sr-only"> skips</span>
+          </span>
         </div>
-        <button class="tile" onClick={handleNextLetter} disabled={skips() <= 0}>
+        <button
+          class="game-btn"
+          onClick={handleNextLetter}
+          disabled={skips() <= 0}
+          aria-describedby="skips"
+        >
           <svg
             aria-label="Next letter"
             xmlns="http://www.w3.org/2000/svg"
