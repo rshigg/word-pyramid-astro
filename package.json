@@ -16,5 +16,6 @@
     "astro": "^4.8.6",
     "solid-js": "^1.8.17",
     "typescript": "^5.4.5"
-  }
+  },
+  "packageManager": "pnpm@9.1.1"
 }
